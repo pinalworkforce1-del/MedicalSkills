@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BOOST Healthcare Workplace Skills Challenge v2.2</title>
+<title>BOOST Healthcare Workplace Skills Challenge v2.3.2</title>
 <style>
 :root{--navy:#123d5a;--navy2:#0d2f49;--teal:#0b8f8b;--aqua:#58c7c3;--gold:#f0b429;--green:#3c8c62;--red:#b34d51;--ink:#243746;--muted:#657985;--line:#d5dee4;--bg:#eef3f5}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}button,select{font:inherit}.wrap{max-width:1120px;margin:auto}
@@ -24,6 +24,21 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 @media(max-width:760px){.skillGrid{grid-template-columns:1fr 1fr}.answers,.exgrid,.refgrid,.resultGrid,.lessonCompare{grid-template-columns:1fr}.fitLabels{grid-template-columns:1fr}.fitBtn{display:grid;grid-template-columns:38px 1fr;text-align:left;align-items:center}.skillRow{grid-template-columns:125px 1fr 40px}}
 @media(max-width:480px){.skillGrid{grid-template-columns:1fr}}
 @media print{.hero,.noPrint,.actions,.audioRow,.footer{display:none!important}#result{display:block!important}.panel{box-shadow:none;border:0}}
+
+.skillPractice{margin-top:12px;padding-top:12px;border-top:1px dashed #b9cfce}
+.skillPractice h4{margin:0 0 6px;color:var(--navy)}
+.practiceScenario{font-weight:800;line-height:1.45;margin:9px 0}
+.practiceChoices{display:flex;gap:7px;flex-wrap:wrap}
+.practiceChoice{border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 11px;font-weight:800;cursor:pointer}
+.practiceChoice:hover{border-color:var(--teal)}
+.practiceChoice.correct{border-color:var(--green);background:#eaf6ed}
+.practiceChoice.wrong{border-color:var(--red);background:#fff0f0}
+.practiceFeedback{min-height:22px;margin-top:8px;color:var(--muted);font-size:13px}
+.skillProgress{font-size:12px;font-weight:900;color:var(--teal);margin-bottom:6px}
+.skillDone{display:inline-block;margin-top:8px;background:#eaf6ed;border:1px solid #b9ddc4;color:#235c3e;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900}
+.exploredPill{display:inline-block;margin:3px 5px 3px 0;border-radius:999px;padding:6px 9px;background:#eef3f5;color:var(--muted);font-size:11px;font-weight:900}
+.exploredPill.done{background:#eaf6ed;color:#235c3e}
+
 </style>
 </head>
 <body>
@@ -32,17 +47,43 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 
 <div id="opening" class="noPrint">
 <section class="panel">
-<div class="step">Why These Skills?</div><h2>Built from recent healthcare employer demand</h2>
+<div class="step">Why These Skills?</div>
+<h2>Built from recent healthcare employer demand</h2>
 <p class="sub">These scenarios emphasize skills that appeared frequently or grew in recent healthcare job postings across Pinal, Maricopa, and Pima Counties.</p>
+
 <div class="demandHero">
-<img id="demandImage" src="assets/images/health_00_employer_demand.png" alt="Arizona healthcare employer demand graphic" onerror="this.style.display='none';document.getElementById('demandFallback').style.display='block'">
-<div id="demandFallback" class="demandFallback" style="display:none"><b>ARIZONA HEALTHCARE EMPLOYERS ARE LOOKING FOR MORE THAN CREDENTIALS.</b><p class="sub">Add <code>health_00_employer_demand.png</code> to assets/images to display the opening visual.</p></div>
+  <img id="demandImage" src="assets/images/health_00_employer_demand.png" alt="Arizona healthcare employer demand graphic"
+       onerror="this.style.display='none';document.getElementById('demandFallback').style.display='block'">
+  <div id="demandFallback" class="demandFallback" style="display:none">
+    <b>ARIZONA HEALTHCARE EMPLOYERS ARE LOOKING FOR MORE THAN CREDENTIALS.</b>
+    <p class="sub">Add <code>health_00_employer_demand.png</code> to assets/images to display the opening visual.</p>
+  </div>
 </div>
-<div class="audioRow"><button class="audioBtn" onclick="toggleWhyAudio()">🔊 Listen: Why These Skills Matter</button><button class="audioBtn" onclick="replayWhyAudio()">↻ Replay</button><span id="whyAudioStatus" class="audioStatus">Optional audio explanation.</span></div>
-<div id="skillGrid" class="skillGrid"></div>
+
+<div class="audioRow">
+  <button class="audioBtn" onclick="toggleWhyAudio()">🔊 Listen: Why These Skills Matter</button>
+  <button class="audioBtn" onclick="replayWhyAudio()">↻ Replay</button>
+  <span id="whyAudioStatus" class="audioStatus">Optional audio explanation.</span>
+</div>
+
+<div id="skillGrid" class="skillGrid" aria-label="Healthcare employer-demand skills">
+  <button class="skillCard" id="skillCard0" data-skill-index="0" onclick="showLesson(0,this)"><b>Communication</b><strong>12,513</strong> postings • +21%<div id="cardDone0" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+  <button class="skillCard" id="skillCard1" data-skill-index="1" onclick="showLesson(1,this)"><b>Workflow Management</b><strong>2,904</strong> postings • +45%<div id="cardDone1" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+  <button class="skillCard" id="skillCard2" data-skill-index="2" onclick="showLesson(2,this)"><b>Compassion</b><strong>2,618</strong> postings • +35%<div id="cardDone2" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+  <button class="skillCard" id="skillCard3" data-skill-index="3" onclick="showLesson(3,this)"><b>Accountability</b><strong>1,490</strong> postings • +59%<div id="cardDone3" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+  <button class="skillCard" id="skillCard4" data-skill-index="4" onclick="showLesson(4,this)"><b>Quality Improvement</b><strong>1,707</strong> postings • +45%<div id="cardDone4" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+  <button class="skillCard" id="skillCard5" data-skill-index="5" onclick="showLesson(5,this)"><b>Problem Solving</b><strong>2,860</strong> postings • +23%<div id="cardDone5" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>
+</div>
 <div id="lesson" class="lesson"></div>
+
 <p class="sub">Source: Lightcast Q3 2026 • Active healthcare postings • Jun 2025–Jul 2026.</p>
-<div class="matchBox"><div class="step">Know the Skills • Quick Match</div><h3 id="matchPrompt" class="matchPrompt"></h3><div id="matchChoices" class="matchChoices"></div><div id="matchFeedback" class="sub" style="margin-top:9px"></div><div class="actions"><button id="matchNext" class="btn ghost" onclick="nextMatch()" disabled>NEXT MATCH</button></div><div class="sub">Practice only — this does not affect your Workplace Judgment score.</div></div>
+
+<div class="matchBox" id="skillPracticeStatus">
+  <div class="step">Explore the Skills</div>
+  <h3>Open a skill card above to learn what it looks like at work.</h3>
+  <p class="sub">Each skill includes a short, unscored recognition activity that teaches the workplace behaviors inside that skill. Explore all six to build the vocabulary you will see in the scenarios.</p>
+  <div id="exploredSkills"></div>
+</div>
 </section>
 
 <section class="panel"><div class="step">Before You Begin</div><h2>How well do you think Health Services fits you?</h2><p class="sub">1 means not a fit. 5 means strong fit. We will ask again after the scenarios.</p><div id="preScale"></div><div class="actions"><button class="btn" onclick="startChallenge()">START THE CHALLENGE</button></div></section>
@@ -70,28 +111,51 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 </div><div class="actions"><button class="btn gold" onclick="finish()">SHOW MY SNAPSHOT</button></div></section>
 
 <section id="result" class="panel stage"><div class="step">BOOST Healthcare Workplace Skills Snapshot</div><div class="resultHero"><div>ALIGNMENT SNAPSHOT</div><div id="label" class="bigResult"></div><div id="summary"></div></div><div class="resultGrid"><div class="box"><h3>Workplace Judgment</h3><div id="skills"></div></div><div class="box"><h3>Technical Exposure</h3><div id="exposureOut"></div></div><div class="box"><h3>What Changed?</h3><div id="change"></div></div><div class="box"><h3>What This Means</h3><div id="take"></div><div id="badges"></div></div></div><p class="sub"><b>Important:</b> This is a career-alignment learning activity, not a hiring assessment, certification exam, or determination that you are qualified to perform healthcare duties.</p><div class="actions"><button class="btn gold" onclick="window.print()">PRINT / SAVE AS PDF</button><button class="btn ghost" onclick="location.reload()">TRY AGAIN</button></div></section>
-<div class="footer">BOOST Healthcare Workplace Skills Challenge • v2.2</div>
+<div class="footer">BOOST Healthcare Workplace Skills Challenge • v2.3.2</div>
 </div></main>
 
 <script>
 const $=id=>document.getElementById(id);
 let preFit=3,postFit=3,matchIndex=0,matchAnswered=false,cur=0,score=0,answered=false,scenarioAudio=null,whyAudio=null,currentChoices=[];
 const SK={communication:"Communication",compassion:"Compassion",accountability:"Accountability",problem:"Problem Solving",workflow:"Workflow / Organization",leadership:"Leadership / Coordination",detail:"Detail Orientation"};
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const DEMAND=[
-["Communication","12,513","+21%","Communication includes speaking clearly, active listening, tone of voice, eye contact, body language, asking clarifying questions, and confirming understanding.","Talking while continuing to type and not checking whether the person understood.","Facing the person, listening, clarifying, and confirming understanding."],
-["Workflow Management","2,904","+45%","Workflow management means organizing work, recognizing competing priorities, adjusting when conditions change, and communicating what needs to happen next.","Trying to do everything at once because everything feels urgent.","Prioritizing the most time-sensitive need and communicating what happens next."],
-["Compassion","2,618","+35%","Compassion means recognizing another person's concern and responding with empathy, respect, patience, and appropriate support.","Dismissing someone's frustration because the workplace is busy.","Acknowledging the concern and helping identify an appropriate next step."],
-["Accountability","1,490","+59%","Accountability means taking responsibility, following through, raising concerns appropriately, and not assuming someone else will handle an important issue.","Assuming another employee will notice and fix a problem.","Raising the concern appropriately and following through until it is handed off."],
-["Quality Improvement","1,707","+45%","Quality improvement means noticing recurring problems, using evidence, and helping improve a process instead of repeatedly working around the same issue.","Creating another unofficial workaround for a repeated problem.","Documenting the recurring issue and helping improve the process."],
-["Problem Solving","2,860","+23%","Problem solving means gathering facts, identifying options, considering consequences, and choosing an appropriate action rather than jumping to the first solution.","Acting immediately on an assumption because it seems likely.","Pausing, gathering the facts, considering options, and choosing an appropriate next step."]
-];
-const MATCHES=[
-["A patient looks confused, so you face them, listen, ask what needs clarification, and confirm what they understood.","Communication"],
-["The same scheduling error keeps happening, so you document the pattern and bring it to the team to improve the process.","Quality Improvement"],
-["Four needs arrive at once, so you identify what is most time-sensitive and communicate what will happen next.","Workflow Management"],
-["A patient is frustrated. You acknowledge the concern, remain respectful, and help identify an appropriate next step.","Compassion"],
-["You notice an important follow-up may have been missed, so you raise the concern and stay involved until it is appropriately handed off.","Accountability"],
-["Information from two sources does not match, so you pause, verify the facts, and determine the appropriate next step.","Problem Solving"]
+{name:"Communication",count:"12,513",growth:"+21%",def:"Communication includes speaking clearly, active listening, tone of voice, eye contact, body language, asking clarifying questions, and confirming understanding.",bad:"Talking while continuing to type and not checking whether the person understood.",good:"Facing the person, listening, clarifying, and confirming understanding.",parts:["Verbal Communication","Nonverbal Communication","Active Listening","Tone of Voice","Clarifying / Confirming"],practice:[
+["A healthcare worker says, “Let me explain what happens next in plain language.”","Verbal Communication"],
+["The worker turns toward the patient, maintains appropriate eye contact, and uses an attentive posture.","Nonverbal Communication"],
+["Before responding, the worker lets the patient finish and summarizes what they heard.","Active Listening"],
+["The words are correct, but the worker sounds impatient and dismissive.","Tone of Voice"],
+["The worker asks, “Can you tell me what part is still unclear?”","Clarifying / Confirming"]]},
+{name:"Workflow Management",count:"2,904",growth:"+45%",def:"Workflow management means organizing work, recognizing competing priorities, sequencing tasks, adjusting when conditions change, and communicating what needs to happen next.",bad:"Trying to do everything at once because everything feels urgent.",good:"Prioritizing the most time-sensitive need and communicating what happens next.",parts:["Prioritization","Sequencing","Adapting to Change","Time Management","Communicating Next Steps"],practice:[
+["Several requests arrive at once, so the worker identifies which need is most time-sensitive.","Prioritization"],
+["The worker completes required steps in the correct order so nothing important is skipped.","Sequencing"],
+["A schedule changes unexpectedly, so the worker reorganizes the plan without losing track of key tasks.","Adapting to Change"],
+["The worker blocks enough time for a required task before the deadline rather than waiting until the last minute.","Time Management"],
+["After reprioritizing, the worker tells the team what will happen now and what will happen next.","Communicating Next Steps"]]},
+{name:"Compassion",count:"2,618",growth:"+35%",def:"Compassion means recognizing another person's concern and responding with empathy, respect, patience, appropriate support, and professional boundaries.",bad:"Dismissing someone's frustration because the workplace is busy.",good:"Acknowledging the concern and helping identify an appropriate next step.",parts:["Empathy","Respectful Tone","Patience","Acknowledging Concerns","Appropriate Support"],practice:[
+["The worker says, “I can understand why that delay would be frustrating.”","Empathy"],
+["Even during a tense conversation, the worker remains calm and speaks respectfully.","Respectful Tone"],
+["The worker gives the person time to explain instead of rushing them because others are waiting.","Patience"],
+["Before offering a solution, the worker recognizes the specific concern the person raised.","Acknowledging Concerns"],
+["The worker cannot solve the issue personally, so they connect the person with the appropriate resource.","Appropriate Support"]]},
+{name:"Accountability",count:"1,490",growth:"+59%",def:"Accountability means taking responsibility, following through, documenting accurately, raising concerns appropriately, and staying within your role.",bad:"Assuming another employee will notice and fix a problem.",good:"Raising the concern appropriately and following through until it is handed off.",parts:["Ownership","Follow-Through","Accurate Documentation","Speaking Up / Escalating","Role Boundaries"],practice:[
+["The worker notices they made an error and reports it rather than hoping nobody notices.","Ownership"],
+["After handing off an unresolved issue, the worker confirms the appropriate person received it.","Follow-Through"],
+["The worker records what actually happened without adding assumptions or changing details.","Accurate Documentation"],
+["A required step may have been missed, so the worker raises the concern through the proper channel.","Speaking Up / Escalating"],
+["The situation requires clinical judgment, so the non-clinical worker gets qualified help instead of acting outside their role.","Role Boundaries"]]},
+{name:"Quality Improvement",count:"1,707",growth:"+45%",def:"Quality improvement means recognizing recurring problems, using evidence, involving the right people, improving a process, and checking whether the change works.",bad:"Creating another unofficial workaround for a repeated problem.",good:"Documenting the recurring issue and helping improve the process.",parts:["Recognizing Patterns","Using Evidence","Team Input","Process Improvement","Monitoring Results"],practice:[
+["The worker notices the same handoff problem has occurred several times, not just once.","Recognizing Patterns"],
+["Before recommending a change, the team reviews when and how often the problem occurs.","Using Evidence"],
+["People who actually use the process are invited to explain where it breaks down.","Team Input"],
+["The team changes one step in the workflow to remove unnecessary duplication.","Process Improvement"],
+["After the change, the team checks whether errors and delays actually decreased.","Monitoring Results"]]},
+{name:"Problem Solving",count:"2,860",growth:"+23%",def:"Problem solving means gathering facts, identifying options, avoiding assumptions, considering consequences, selecting an appropriate action, and checking the result.",bad:"Acting immediately on an assumption because it seems likely.",good:"Pausing, gathering the facts, considering options, and choosing an appropriate next step.",parts:["Gathering Facts","Identifying Options","Avoiding Assumptions","Considering Consequences","Choosing an Action"],practice:[
+["Two sources do not match, so the worker pauses and verifies the information before acting.","Gathering Facts"],
+["The worker identifies several possible next steps instead of treating the first idea as the only option.","Identifying Options"],
+["The worker does not decide why something happened until there is evidence to support the cause.","Avoiding Assumptions"],
+["Before acting, the worker considers how each option could affect the patient, team, and workflow.","Considering Consequences"],
+["After reviewing the facts and options, the worker selects the most appropriate next step within their role.","Choosing an Action"]]}
 ];
 const Q=[
 {t:"The Handoff",img:"assets/images/health_01_handoff.png",aud:"assets/audio/health_01_handoff.mp3",x:"Your shift is ending. A coworker taking over asks for the most important updates. Several things happened during the shift, and one item still needs follow-up.",a:["Give a quick summary from memory and leave so the next shift can sort out any missing details.","Use the established handoff process, clearly identify the unresolved item, and confirm the coworker understands the priority.","Send every note from the entire shift so the coworker has all available information.","Only mention the unresolved item because the completed work no longer matters."],c:1,s:["communication","detail","accountability"],f:"Strong handoffs are clear, accurate, and focused on what the next person needs to safely continue the work."},
@@ -104,13 +168,54 @@ const Q=[
 {t:"Know Your Role",img:"assets/images/health_08_role_boundary.png",aud:"assets/audio/health_08_role_boundary.mp3",x:"A person in the waiting area suddenly appears to need prompt clinical attention. You are not trained to assess or treat the condition.",a:["Try to determine what is wrong before telling anyone so you can give the clinical team better information.","Use the workplace emergency or escalation process immediately and get qualified clinical help while staying within your role.","Wait a few minutes to see whether the person improves on their own.","Ask another non-clinical coworker what they think you should do."],c:1,s:["accountability","communication","workflow"],f:"Good workplace judgment includes knowing when to get qualified help and staying within your role."}
 ];
 const SS={};Object.keys(SK).forEach(k=>SS[k]={r:0,t:0});Q.forEach(q=>q.s.forEach(k=>SS[k].t++));
-function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function buildSkills(){$("skillGrid").innerHTML=DEMAND.map((d,i)=>`<button class="skillCard" onclick="showLesson(${i},this)"><b>${d[0]}</b><strong>${d[1]}</strong> postings • ${d[2]}</button>`).join("")}
-function showLesson(i,el){document.querySelectorAll(".skillCard").forEach(x=>x.classList.remove("active"));el.classList.add("active");const d=DEMAND[i];$("lesson").innerHTML=`<b>What ${d[0]} looks like at work</b><br>${d[3]}<div class="lessonCompare"><div class="bad"><b>NOT ${d[0].toUpperCase()}</b><br>${d[4]}</div><div class="good"><b>${d[0].toUpperCase()} IN ACTION</b><br>${d[5]}</div></div>`;$("lesson").classList.add("show")}
-function renderMatch(){const m=MATCHES[matchIndex];$("matchPrompt").textContent=`${matchIndex+1} of ${MATCHES.length}: ${m[0]}`;$("matchChoices").innerHTML=shuffle(DEMAND.map(d=>d[0])).map(l=>`<button class="matchChoice" onclick="answerMatch(this,${JSON.stringify(l)})">${l}</button>`).join("");$("matchFeedback").textContent="";$("matchNext").disabled=true;matchAnswered=false}
-function answerMatch(btn,label){if(matchAnswered)return;matchAnswered=true;document.querySelectorAll(".matchChoice").forEach(b=>b.disabled=true);const ok=label===MATCHES[matchIndex][1];btn.style.borderColor=ok?varGreen():varRed();$("matchFeedback").textContent=ok?"✓ That's it.":"Not quite. The best match is "+MATCHES[matchIndex][1]+".";$("matchNext").disabled=false}
-function varGreen(){return "#3c8c62"} function varRed(){return "#b34d51"}
-function nextMatch(){if(matchIndex<MATCHES.length-1){matchIndex++;renderMatch()}else{$("matchNext").textContent="MATCH COMPLETE ✓";$("matchNext").disabled=true}}
+let activeSkill=0, skillPracticeIndex={}, skillPracticeOrder={}, explored={};
+DEMAND.forEach((d,i)=>{skillPracticeIndex[i]=0;skillPracticeOrder[i]=shuffle(d.practice);explored[i]=false});
+
+function buildSkills(){
+ // The six Lightcast cards are permanent HTML in v2.3.2. JavaScript adds interaction/status only.
+ // Defensive fallback: rebuild them only if the static markup is missing.
+ const grid=$("skillGrid");
+ if(!grid.querySelector(".skillCard")){
+   grid.innerHTML=DEMAND.map((d,i)=>`<button class="skillCard" id="skillCard${i}" data-skill-index="${i}" onclick="showLesson(${i},this)"><b>${d.name}</b><strong>${d.count}</strong> postings • ${d.growth}<div id="cardDone${i}" style="margin-top:5px;font-size:10px;color:var(--green)"></div></button>`).join("");
+ }
+ updateExplored();
+}
+function showLesson(i,el){
+ activeSkill=i;
+ document.querySelectorAll(".skillCard").forEach(x=>x.classList.remove("active"));el.classList.add("active");
+ const d=DEMAND[i];
+ $("lesson").innerHTML=`<b>What ${d.name} looks like at work</b><br>${d.def}
+ <div class="lessonCompare"><div class="bad"><b>NOT ${d.name.toUpperCase()}</b><br>${d.bad}</div><div class="good"><b>${d.name.toUpperCase()} IN ACTION</b><br>${d.good}</div></div>
+ <div class="skillPractice"><div class="step">Recognize the Parts</div><h4>${d.name} is made up of several workplace behaviors.</h4>
+ <div>${d.parts.map(p=>`<span class="tag">${p}</span>`).join("")}</div>
+ <div id="skillPracticeInner"></div></div>`;
+ $("lesson").classList.add("show");
+ renderSkillPractice(i);
+}
+function renderSkillPractice(i){
+ const d=DEMAND[i], idx=skillPracticeIndex[i], inner=$("skillPracticeInner");
+ if(idx>=skillPracticeOrder[i].length){
+   explored[i]=true; $("cardDone"+i).textContent="✓ Skill explored"; updateExplored();
+   inner.innerHTML=`<div class="skillDone">✓ ${d.name} explored</div><p class="sub">You recognized the workplace behaviors that make up this skill. This practice is instructional and is not scored.</p>`;
+   return;
+ }
+ const q=skillPracticeOrder[i][idx], choices=shuffle(d.parts);
+ inner.innerHTML=`<div class="skillProgress">${idx+1} of ${skillPracticeOrder[i].length}</div>
+ <div class="practiceScenario">${q[0]}</div>
+ <div class="practiceChoices">${choices.map(c=>`<button class="practiceChoice" onclick='answerSkillPractice(this,${i},${JSON.stringify(c)},${JSON.stringify(q[1])})'>${c}</button>`).join("")}</div>
+ <div id="skillPracticeFeedback" class="practiceFeedback">Choose the component this behavior best demonstrates.</div>`;
+}
+function answerSkillPractice(btn,i,choice,correct){
+ const buttons=[...document.querySelectorAll("#skillPracticeInner .practiceChoice")];
+ buttons.forEach(b=>b.disabled=true);
+ if(choice===correct){btn.classList.add("correct");$("skillPracticeFeedback").innerHTML="✓ Correct — this is <b>"+correct+"</b>.";}
+ else{btn.classList.add("wrong");const cb=buttons.find(b=>b.textContent===correct);if(cb)cb.classList.add("correct");$("skillPracticeFeedback").innerHTML="The strongest match is <b>"+correct+"</b>.";}
+ setTimeout(()=>{skillPracticeIndex[i]++;renderSkillPractice(i)},700);
+}
+function updateExplored(){
+ const done=Object.values(explored).filter(Boolean).length;
+ $("exploredSkills").innerHTML=DEMAND.map((d,i)=>`<span class="exploredPill ${explored[i]?"done":""}">${explored[i]?"✓ ":""}${d.name}</span>`).join("")+`<div class="sub" style="margin-top:7px">${done} of ${DEMAND.length} skills explored</div>`;
+}
 function buildScale(id,type){const labs=["Not a Fit","Low Fit","Not Sure","Good Fit","Strong Fit"];$(id).innerHTML=`<div class="fitLabels">${labs.map((l,i)=>`<button class="fitBtn ${i===2?"selected":""}" onclick="setFit('${id}','${type}',${i+1},this)"><b>${i+1}</b><small>${l}</small></button>`).join("")}</div><div class="fitTrack"><span id="${id}Track" style="width:60%"></span></div>`}
 function setFit(id,type,v,el){if(type==="pre")preFit=v;else postFit=v;$(id).querySelectorAll(".fitBtn").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");$(id+"Track").style.width=(v*20)+"%"}
 function getWhyAudio(){if(!whyAudio){whyAudio=new Audio("assets/audio/health_00_why_these_skills.mp3");whyAudio.onended=()=>$("whyAudioStatus").textContent="Finished.";whyAudio.onerror=()=>$("whyAudioStatus").textContent="Audio file could not be loaded."}return whyAudio}
@@ -127,6 +232,6 @@ function showExposure(){$("complete").classList.remove("show");$("exposure").cla
 function showPostFit(){$("exposure").classList.remove("show");$("postfit").classList.add("show");$("postfit").scrollIntoView({behavior:"smooth"})}
 function showReflection(){$("postfit").classList.remove("show");$("reflection").classList.add("show");$("reflection").scrollIntoView({behavior:"smooth"})}
 function finish(){const pct=Math.round(score/(Q.length*100)*100),lab=pct>=85?"STRONG WORKPLACE ALIGNMENT":pct>=70?"PROMISING ALIGNMENT":pct>=55?"MIXED ALIGNMENT — EXPLORE MORE":"MORE EXPOSURE RECOMMENDED";$("label").textContent=lab;$("summary").textContent=`Situational judgment score: ${pct}% • ${Q.length} healthcare workplace scenarios completed`;$("skills").innerHTML=Object.entries(SK).map(([k,l])=>{const s=SS[k],p=s.t?Math.round(s.r/s.t*100):0;return `<div class="skillRow"><span>${l}</span><div class="skillBar"><span style="width:${p}%"></span></div><b>${p}%</b></div>`}).join("");$("exposureOut").innerHTML=`<p><b>EMR:</b> ${$("emr").value}</p><p><b>CPR/BLS:</b> ${$("cpr").value}</p><p><b>Direct Patient Care:</b> ${$("care").value}</p><p><b>Scheduling/Coordination:</b> ${$("sched").value}</p>`;const d=postFit-preFit;$("change").innerHTML=`<p><b>Before:</b> ${preFit}/5<br><b>After:</b> ${postFit}/5<br><b>Change:</b> ${d>0?"+":""}${d}</p><p><b>Interest:</b> ${$("interest").value}</p><p><b>Environment fit:</b> ${$("env").value}</p>`;if(pct>=85&&postFit<=3)$("change").innerHTML+=`<div class="coachCue"><b>Reflection cue</b><br>Your workplace judgment was strong, but your self-rated fit remained moderate. What is keeping this from feeling like a 4 or 5?</div>`;else if(d>0)$("change").innerHTML+=`<div class="coachCue"><b>Reflection cue</b><br>Your fit rating increased after experiencing the work. What specifically made healthcare feel more aligned?</div>`;else if(d<0)$("change").innerHTML+=`<div class="coachCue"><b>Reflection cue</b><br>Your fit rating decreased after experiencing the work. Which situations changed your perspective?</div>`;const take=pct>=85?"Your choices consistently aligned with the workplace judgment emphasized in these scenarios. That does not establish technical qualification, but it suggests the environment and decision patterns may be worth exploring further.":pct>=70?"You showed a promising pattern of workplace judgment. Review the scenarios that were less comfortable and consider whether additional exposure would help you decide if healthcare fits.":"Your results are mixed, which is useful information. Consider more workplace exposure before making a larger career or training decision.";$("take").innerHTML=`<p>${take}</p><p><b>Next interest:</b> ${$("nextExp").value}</p>`;const badges=[];if(pct>=85)badges.push("⭐ Healthcare Workplace Standout");if(SS.communication.r/SS.communication.t>=.75)badges.push("💬 Clear Communicator");if(SS.accountability.r/SS.accountability.t>=.75)badges.push("✓ Accountability");if(SS.problem.r/SS.problem.t>=.75)badges.push("💡 Problem Solver");if(SS.compassion.r/SS.compassion.t>=.75)badges.push("🤝 Compassion in Action");$("badges").innerHTML=(badges.length?badges:["🎯 Challenge Completed"]).map(x=>`<span class="badge">${x}</span>`).join("");$("reflection").classList.remove("show");$("result").classList.add("show");$("result").scrollIntoView({behavior:"smooth"})}
-buildSkills();renderMatch();buildScale("preScale","pre");buildScale("postScale","post");
+document.addEventListener("DOMContentLoaded",()=>{buildSkills();buildScale("preScale","pre");buildScale("postScale","post");});
 </script>
 </body></html>
