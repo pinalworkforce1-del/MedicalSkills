@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BOOST Healthcare Workplace Skills Challenge v2.3.2</title>
+<title>BOOST Healthcare Workplace Skills Challenge v2.3.3</title>
 <style>
 :root{--navy:#123d5a;--navy2:#0d2f49;--teal:#0b8f8b;--aqua:#58c7c3;--gold:#f0b429;--green:#3c8c62;--red:#b34d51;--ink:#243746;--muted:#657985;--line:#d5dee4;--bg:#eef3f5}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}button,select{font:inherit}.wrap{max-width:1120px;margin:auto}
@@ -33,7 +33,13 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 .practiceChoice:hover{border-color:var(--teal)}
 .practiceChoice.correct{border-color:var(--green);background:#eaf6ed}
 .practiceChoice.wrong{border-color:var(--red);background:#fff0f0}
-.practiceFeedback{min-height:22px;margin-top:8px;color:var(--muted);font-size:13px}
+.practiceFeedback{min-height:22px;margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45}
+.practiceActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.practiceNext{border:0;border-radius:8px;padding:9px 12px;font-weight:900;cursor:pointer;background:var(--navy);color:#fff}
+.practiceRetry{border:0;border-radius:8px;padding:9px 12px;font-weight:900;cursor:pointer;background:#e7edf0;color:var(--navy)}
+.componentTag{display:inline-block;background:#eef3f5;border:1px solid var(--line);border-radius:999px;padding:6px 9px;margin:3px;font-size:10px;font-weight:900;color:var(--muted)}
+.componentTag.done{background:#eaf6ed;border-color:#b9ddc4;color:#235c3e}
+.learningMoment{margin-top:9px;padding:9px 11px;border-left:4px solid var(--teal);background:#f2f8f8;border-radius:7px;color:var(--ink)}
 .skillProgress{font-size:12px;font-weight:900;color:var(--teal);margin-bottom:6px}
 .skillDone{display:inline-block;margin-top:8px;background:#eaf6ed;border:1px solid #b9ddc4;color:#235c3e;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900}
 .exploredPill{display:inline-block;margin:3px 5px 3px 0;border-radius:999px;padding:6px 9px;background:#eef3f5;color:var(--muted);font-size:11px;font-weight:900}
@@ -53,10 +59,10 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 
 <div class="demandHero">
   <img id="demandImage" src="assets/images/health_00_employer_demand.png" alt="Arizona healthcare employer demand graphic"
-       onerror="this.style.display='none';document.getElementById('demandFallback').style.display='block'">
+       data-fallback-src="assets/images/healthcare-employer-demand.png" onerror="handleDemandImageError(this)">
   <div id="demandFallback" class="demandFallback" style="display:none">
     <b>ARIZONA HEALTHCARE EMPLOYERS ARE LOOKING FOR MORE THAN CREDENTIALS.</b>
-    <p class="sub">Add <code>health_00_employer_demand.png</code> to assets/images to display the opening visual.</p>
+    <p class="sub">The opening visual is temporarily unavailable, but you can continue the experience below.</p>
   </div>
 </div>
 
@@ -111,7 +117,7 @@ main .wrap{padding:16px}.panel{background:#fff;border:1px solid var(--line);bord
 </div><div class="actions"><button class="btn gold" onclick="finish()">SHOW MY SNAPSHOT</button></div></section>
 
 <section id="result" class="panel stage"><div class="step">BOOST Healthcare Workplace Skills Snapshot</div><div class="resultHero"><div>ALIGNMENT SNAPSHOT</div><div id="label" class="bigResult"></div><div id="summary"></div></div><div class="resultGrid"><div class="box"><h3>Workplace Judgment</h3><div id="skills"></div></div><div class="box"><h3>Technical Exposure</h3><div id="exposureOut"></div></div><div class="box"><h3>What Changed?</h3><div id="change"></div></div><div class="box"><h3>What This Means</h3><div id="take"></div><div id="badges"></div></div></div><p class="sub"><b>Important:</b> This is a career-alignment learning activity, not a hiring assessment, certification exam, or determination that you are qualified to perform healthcare duties.</p><div class="actions"><button class="btn gold" onclick="window.print()">PRINT / SAVE AS PDF</button><button class="btn ghost" onclick="location.reload()">TRY AGAIN</button></div></section>
-<div class="footer">BOOST Healthcare Workplace Skills Challenge • v2.3.2</div>
+<div class="footer">BOOST Healthcare Workplace Skills Challenge • v2.3.3</div>
 </div></main>
 
 <script>
@@ -168,11 +174,11 @@ const Q=[
 {t:"Know Your Role",img:"assets/images/health_08_role_boundary.png",aud:"assets/audio/health_08_role_boundary.mp3",x:"A person in the waiting area suddenly appears to need prompt clinical attention. You are not trained to assess or treat the condition.",a:["Try to determine what is wrong before telling anyone so you can give the clinical team better information.","Use the workplace emergency or escalation process immediately and get qualified clinical help while staying within your role.","Wait a few minutes to see whether the person improves on their own.","Ask another non-clinical coworker what they think you should do."],c:1,s:["accountability","communication","workflow"],f:"Good workplace judgment includes knowing when to get qualified help and staying within your role."}
 ];
 const SS={};Object.keys(SK).forEach(k=>SS[k]={r:0,t:0});Q.forEach(q=>q.s.forEach(k=>SS[k].t++));
-let activeSkill=0, skillPracticeIndex={}, skillPracticeOrder={}, explored={};
-DEMAND.forEach((d,i)=>{skillPracticeIndex[i]=0;skillPracticeOrder[i]=shuffle(d.practice);explored[i]=false});
+let activeSkill=0, skillPracticeIndex={}, skillPracticeOrder={}, explored={}, skillAttempts={}, completedParts={};
+DEMAND.forEach((d,i)=>{skillPracticeIndex[i]=0;skillPracticeOrder[i]=shuffle(d.practice);explored[i]=false;skillAttempts[i]=0;completedParts[i]=new Set()});
 
 function buildSkills(){
- // The six Lightcast cards are permanent HTML in v2.3.2. JavaScript adds interaction/status only.
+ // The six Lightcast cards are permanent HTML in v2.3.3. JavaScript adds interaction/status only.
  // Defensive fallback: rebuild them only if the static markup is missing.
  const grid=$("skillGrid");
  if(!grid.querySelector(".skillCard")){
@@ -187,30 +193,66 @@ function showLesson(i,el){
  $("lesson").innerHTML=`<b>What ${d.name} looks like at work</b><br>${d.def}
  <div class="lessonCompare"><div class="bad"><b>NOT ${d.name.toUpperCase()}</b><br>${d.bad}</div><div class="good"><b>${d.name.toUpperCase()} IN ACTION</b><br>${d.good}</div></div>
  <div class="skillPractice"><div class="step">Recognize the Parts</div><h4>${d.name} is made up of several workplace behaviors.</h4>
- <div>${d.parts.map(p=>`<span class="tag">${p}</span>`).join("")}</div>
+ <div id="componentList">${renderComponentTags(i)}</div>
  <div id="skillPracticeInner"></div></div>`;
  $("lesson").classList.add("show");
  renderSkillPractice(i);
 }
+function renderComponentTags(i){
+ const d=DEMAND[i];
+ return d.parts.map(p=>`<span class="componentTag ${completedParts[i].has(p)?"done":""}">${completedParts[i].has(p)?"✓ ":""}${p}</span>`).join("");
+}
+function refreshComponentTags(i){const box=$("componentList");if(box)box.innerHTML=renderComponentTags(i)}
 function renderSkillPractice(i){
  const d=DEMAND[i], idx=skillPracticeIndex[i], inner=$("skillPracticeInner");
+ skillAttempts[i]=0;
  if(idx>=skillPracticeOrder[i].length){
-   explored[i]=true; $("cardDone"+i).textContent="✓ Skill explored"; updateExplored();
-   inner.innerHTML=`<div class="skillDone">✓ ${d.name} explored</div><p class="sub">You recognized the workplace behaviors that make up this skill. This practice is instructional and is not scored.</p>`;
+   explored[i]=true; $("cardDone"+i).textContent="✓ Skill explored"; updateExplored(); refreshComponentTags(i);
+   inner.innerHTML=`<div class="skillDone">✓ ${d.name} explored</div><div class="learningMoment">You just practiced five behaviors healthcare employers rely on every day. These mini-lessons are instructional and are not scored.</div><div class="practiceActions"><button class="practiceNext" onclick="returnToSkillCards()">EXPLORE ANOTHER SKILL →</button></div>`;
    return;
  }
  const q=skillPracticeOrder[i][idx], choices=shuffle(d.parts);
  inner.innerHTML=`<div class="skillProgress">${idx+1} of ${skillPracticeOrder[i].length}</div>
  <div class="practiceScenario">${q[0]}</div>
  <div class="practiceChoices">${choices.map(c=>`<button class="practiceChoice" onclick='answerSkillPractice(this,${i},${JSON.stringify(c)},${JSON.stringify(q[1])})'>${c}</button>`).join("")}</div>
- <div id="skillPracticeFeedback" class="practiceFeedback">Choose the component this behavior best demonstrates.</div>`;
+ <div id="skillPracticeFeedback" class="practiceFeedback">Choose the component this behavior best demonstrates.</div>
+ <div id="skillPracticeActions" class="practiceActions"></div>`;
 }
 function answerSkillPractice(btn,i,choice,correct){
- const buttons=[...document.querySelectorAll("#skillPracticeInner .practiceChoice")];
- buttons.forEach(b=>b.disabled=true);
- if(choice===correct){btn.classList.add("correct");$("skillPracticeFeedback").innerHTML="✓ Correct — this is <b>"+correct+"</b>.";}
- else{btn.classList.add("wrong");const cb=buttons.find(b=>b.textContent===correct);if(cb)cb.classList.add("correct");$("skillPracticeFeedback").innerHTML="The strongest match is <b>"+correct+"</b>.";}
- setTimeout(()=>{skillPracticeIndex[i]++;renderSkillPractice(i)},700);
+ const buttons=[...document.querySelectorAll("#skillPracticeInner .practiceChoice")], feedback=$("skillPracticeFeedback"), actions=$("skillPracticeActions");
+ if(btn.disabled)return;
+ if(choice===correct){
+   buttons.forEach(b=>b.disabled=true); btn.classList.add("correct"); completedParts[i].add(correct); refreshComponentTags(i);
+   feedback.innerHTML=`✓ <b>You got it — ${correct}.</b><div class="learningMoment">That behavior is a practical example of ${correct.toLowerCase()} at work.</div>`;
+   actions.innerHTML=`<button class="practiceNext" onclick="advanceSkillPractice(${i})">NEXT SITUATION →</button>`;
+   return;
+ }
+ skillAttempts[i]++;
+ btn.classList.add("wrong"); btn.disabled=true;
+ if(skillAttempts[i]===1){
+   buttons.forEach(b=>b.disabled=true);
+   feedback.innerHTML=`<b>Not quite — take another look.</b><br>Think about what the worker is actually doing in this situation.`;
+   actions.innerHTML=`<button class="practiceRetry" onclick="retrySkillPractice(${i})">TRY AGAIN</button>`;
+ }else{
+   buttons.forEach(b=>b.disabled=true); const cb=buttons.find(b=>b.textContent===correct); if(cb)cb.classList.add("correct"); completedParts[i].add(correct); refreshComponentTags(i);
+   feedback.innerHTML=`<b>This is ${correct}.</b><div class="learningMoment">The key behavior in this situation best demonstrates ${correct.toLowerCase()}. Keep that clue in mind when you see it in the workplace scenarios.</div>`;
+   actions.innerHTML=`<button class="practiceNext" onclick="advanceSkillPractice(${i})">NEXT SITUATION →</button>`;
+ }
+}
+function retrySkillPractice(i){
+ const actions=$("skillPracticeActions"); if(actions)actions.innerHTML="";
+ const feedback=$("skillPracticeFeedback"); if(feedback)feedback.textContent="Try again — choose the component that best matches the behavior.";
+ document.querySelectorAll("#skillPracticeInner .practiceChoice").forEach(b=>{if(!b.classList.contains("wrong"))b.disabled=false});
+}
+function advanceSkillPractice(i){skillPracticeIndex[i]++;renderSkillPractice(i)}
+function returnToSkillCards(){
+ $("lesson").classList.remove("show"); document.querySelectorAll(".skillCard").forEach(x=>x.classList.remove("active"));
+ $("skillGrid").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function handleDemandImageError(img){
+ const fallback=img.dataset.fallbackSrc;
+ if(fallback && !img.dataset.triedFallback){img.dataset.triedFallback="1";img.src=fallback;return}
+ img.style.display="none";$("demandFallback").style.display="block";
 }
 function updateExplored(){
  const done=Object.values(explored).filter(Boolean).length;
